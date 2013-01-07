@@ -1,4 +1,5 @@
 To setup:
+
     git submodule init
     git submodule update
     ln -s `pwd` ~/.vim
