@@ -26,6 +26,9 @@ Bundle 'glsl.vim'
 Bundle 'python.vim'
 Bundle 'OmniCppComplete'
 Bundle 'pangloss/vim-javascript.git'
+Bundle 'stjernstrom/vim-ruby-run.git'
+Bundle 'jayferd/ragel.vim'
+Bundle 'derekwyatt/vim-scala.git'
 
 filetype plugin indent on
 
@@ -50,7 +53,7 @@ set numberwidth=5
 
 " Color Scheme
 set t_Co=256
-set background=dark
+set background=light
 colorscheme solarized
 call togglebg#map("<F6>")
 
@@ -104,5 +107,56 @@ if has("gui_running")
   set guioptions-=t
 
   set mousehide
-  set guifont=Monaco:h22
+  set guifont=Inconsolata\ for\ Powerline:h14
 endif
+command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+                \ | wincmd p | diffthis
+
+" Line 80
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+match OverLength /\%81v.\+/
+
+" powerline
+
+" experimental tabbar
+
+
+function MyTabLine()
+  hi TabLineFill term=bold cterm=bold ctermbg=236
+  hi TabLine term=bold cterm=bold ctermbg=240 ctermfg=231
+  hi TabLineSel term=bold cterm=bold ctermbg=148 ctermfg=22
+  let s = ''
+  for i in range(tabpagenr('$'))
+    " select the highlighting
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
+
+    " set the tab page number (for mouse clicks)
+    let s .= '%' . (i + 1) . 'T'
+
+    " the label is made by MyTabLabel()
+    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+  endfor
+
+  " after the last tab fill with TabLineFill and reset tab page nr
+  let s .= '%#TabLineFill#%T'
+
+  " right-align the label to close the current tab page
+  if tabpagenr('$') > 1
+    let s .= '%=%#TabLine#%999X'
+  endif
+
+  return s
+endfunction
+
+function MyTabLabel(n)
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  return fnamemodify(bufname(buflist[winnr - 1]), ":t")
+endfunction
+
+set tabline=%!MyTabLine()
+set showtabline=2
