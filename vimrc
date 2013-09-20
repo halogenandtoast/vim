@@ -19,9 +19,8 @@ Bundle 'altercation/vim-colors-solarized.git'
 Bundle 'othree/html5.vim.git'
 Bundle 'kchmck/vim-coffee-script.git'
 Bundle 'tComment'
-Bundle 'scrooloose/nerdtree'
 Bundle 'godlygeek/tabular.git'
-Bundle 'Lokaltog/vim-powerline.git'
+Bundle 'itchyny/lightline.vim'
 Bundle 'glsl.vim'
 Bundle 'python.vim'
 Bundle 'OmniCppComplete'
@@ -29,6 +28,10 @@ Bundle 'pangloss/vim-javascript.git'
 Bundle 'stjernstrom/vim-ruby-run.git'
 Bundle 'jayferd/ragel.vim'
 Bundle 'derekwyatt/vim-scala.git'
+Bundle 'rking/ag.vim'
+Bundle 'nono/vim-handlebars.git'
+Bundle 'guns/vim-clojure-static.git'
+Bundle 'elixir-lang/vim-elixir.git'
 
 filetype plugin indent on
 
@@ -53,7 +56,7 @@ set numberwidth=5
 
 " Color Scheme
 set t_Co=256
-set background=light
+set background=dark
 colorscheme solarized
 call togglebg#map("<F6>")
 
@@ -65,13 +68,15 @@ set incsearch
 set splitbelow
 set splitright
 
-" Grep
-set grepprg=ack
-
 " Trailing Whitespace
 set listchars=tab:>\ ,trail:•,extends:>,precedes:<,nbsp:+
 set list
 nmap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+
+" Leaders
+nmap <leader>r :!ruby %<CR>
+nmap <leader>c :%s/^\s*#.*$//g<CR>:%s/\(\n\)\n\+/\1/g<CR>:nohl<CR>gg
+nmap <leader>V :tabe ~/.vimrc<CR>
 
 " Cursor
 set cursorline
@@ -112,14 +117,17 @@ endif
 command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
                 \ | wincmd p | diffthis
 
-" Line 80
+" Faster escape
+set noesckeys
+
+" Incomplete Commands
+set showcmd
+
+" Exceeding column 80
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 match OverLength /\%81v.\+/
 
-" powerline
-
 " experimental tabbar
-
 
 function MyTabLine()
   hi TabLineFill term=bold cterm=bold ctermbg=236
@@ -160,3 +168,97 @@ endfunction
 
 set tabline=%!MyTabLine()
 set showtabline=2
+
+" Crazy Land
+
+" Merge a tab into a split in the previous window
+function! MergeTabs()
+  if tabpagenr() == 1
+    return
+  endif
+  let bufferName = bufname("%")
+  if tabpagenr("$") == tabpagenr()
+    close!
+  else
+    close!
+    tabprev
+  endif
+  split
+  execute "buffer " . bufferName
+endfunction
+
+nmap <C-W>u :call MergeTabs()<CR>
+
+" Running Tests
+function! RunCurrentTest()
+  let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\)$') != -1
+  if in_test_file
+    call SetTestFile()
+
+    if match(expand('%'), '\.feature$') != -1
+      call SetTestRunner("!bin/cucumber")
+      exec g:bjo_test_runner g:bjo_test_file
+    elseif match(expand('%'), '_spec\.rb$') != -1
+      call SetTestRunner("!bin/rspec")
+      exec g:bjo_test_runner g:bjo_test_file
+    else
+      call SetTestRunner("!ruby -Itest")
+      exec g:bjo_test_runner g:bjo_test_file
+    endif
+  else
+    exec g:bjo_test_runner g:bjo_test_file
+  endif
+endfunction
+
+function! SetTestRunner(runner)
+  let g:bjo_test_runner=a:runner
+endfunction
+
+function! RunCurrentLineInTest()
+  let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\)$') != -1
+  if in_test_file
+    call SetTestFileWithLine()
+  end
+
+  exec "!bin/rspec" g:bjo_test_file . ":" . g:bjo_test_file_line
+endfunction
+
+function! SetTestFile()
+  let g:bjo_test_file=@%
+endfunction
+
+function! SetTestFileWithLine()
+  let g:bjo_test_file=@%
+  let g:bjo_test_file_line=line(".")
+endfunction
+
+map <Leader>t :w<cr>:call RunCurrentLineInTest()<CR>
+
+" More useful k and j
+nmap k gk
+nmap j gj
+
+" Don't add the comment prefix when I hit enter or o/O on a comment line.
+set formatoptions-=or
+
+" Rename file
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+map <leader>n :call RenameFile()<cr>
+
+" Edit another file in the same directory as the current file
+" uses expression to extract path from current file's path
+map <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
+map <Leader>s :split <C-R>=expand("%:p:h") . '/'<CR>
+map <Leader>v :vnew <C-R>=expand("%:p:h") . '/'<CR>
+
+" Indent
+map <Leader>i mmgg=G`m<CR>
+
