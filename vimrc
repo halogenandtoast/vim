@@ -8,11 +8,13 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-fugitive'
 Bundle 'greplace.vim'
+Bundle 'thoughtbot/vim-rspec'
 Bundle 'tpope/vim-rails.git'
 Bundle 'tpope/vim-cucumber.git'
 Bundle 'tpope/vim-bundler.git'
 Bundle 'tpope/vim-git.git'
 Bundle 'tpope/vim-endwise.git'
+Bundle 'tpope/vim-dispatch.git'
 Bundle 'tpope/vim-rake.git'
 Bundle 'tpope/vim-surround.git'
 Bundle 'altercation/vim-colors-solarized.git'
@@ -32,6 +34,8 @@ Bundle 'rking/ag.vim'
 Bundle 'nono/vim-handlebars.git'
 Bundle 'guns/vim-clojure-static.git'
 Bundle 'elixir-lang/vim-elixir.git'
+Bundle 'christoomey/vim-tmux-navigator'
+Bundle 'kien/ctrlp.vim.git'
 
 filetype plugin indent on
 
@@ -56,12 +60,13 @@ set numberwidth=5
 
 " Color Scheme
 set t_Co=256
+let g:solarized_termcolors=256
 set background=dark
 colorscheme solarized
 call togglebg#map("<F6>")
 
 " Search Options
-set hlsearch
+" set hlsearch
 set incsearch
 
 " Splits
@@ -77,6 +82,8 @@ nmap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 nmap <leader>r :!ruby %<CR>
 nmap <leader>c :%s/^\s*#.*$//g<CR>:%s/\(\n\)\n\+/\1/g<CR>:nohl<CR>gg
 nmap <leader>V :tabe ~/.vimrc<CR>
+nmap <leader>h :%s/:\(\w\+\) =>/\1:/gc<CR>
+nmap <leader>R :so ~/.vimrc<CR>
 
 " Cursor
 set cursorline
@@ -85,8 +92,8 @@ set cursorline
 runtime macros/matchit.vim
 set showmatch
 set mat=5
-nnoremap <C-L> :nohls<CR><C-L>
-inoremap <C-L> <C-O>:nohls<CR>
+" nnoremap <C-M> :nohls<CR><C-L>
+" inoremap <C-M> <C-O>:nohls<CR>
 
 " File messages and options
 set shortmess=atI
@@ -114,7 +121,7 @@ if has("gui_running")
   set mousehide
   set guifont=Inconsolata\ for\ Powerline:h14
 endif
-command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
                 \ | wincmd p | diffthis
 
 " Faster escape
@@ -123,13 +130,9 @@ set noesckeys
 " Incomplete Commands
 set showcmd
 
-" Exceeding column 80
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
-
 " experimental tabbar
 
-function MyTabLine()
+function! MyTabLine()
   hi TabLineFill term=bold cterm=bold ctermbg=236
   hi TabLine term=bold cterm=bold ctermbg=240 ctermfg=231
   hi TabLineSel term=bold cterm=bold ctermbg=148 ctermfg=22
@@ -160,7 +163,7 @@ function MyTabLine()
   return s
 endfunction
 
-function MyTabLabel(n)
+function! MyTabLabel(n)
   let buflist = tabpagebuflist(a:n)
   let winnr = tabpagewinnr(a:n)
   return fnamemodify(bufname(buflist[winnr - 1]), ":t")
@@ -188,51 +191,6 @@ function! MergeTabs()
 endfunction
 
 nmap <C-W>u :call MergeTabs()<CR>
-
-" Running Tests
-function! RunCurrentTest()
-  let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\)$') != -1
-  if in_test_file
-    call SetTestFile()
-
-    if match(expand('%'), '\.feature$') != -1
-      call SetTestRunner("!bin/cucumber")
-      exec g:bjo_test_runner g:bjo_test_file
-    elseif match(expand('%'), '_spec\.rb$') != -1
-      call SetTestRunner("!bin/rspec")
-      exec g:bjo_test_runner g:bjo_test_file
-    else
-      call SetTestRunner("!ruby -Itest")
-      exec g:bjo_test_runner g:bjo_test_file
-    endif
-  else
-    exec g:bjo_test_runner g:bjo_test_file
-  endif
-endfunction
-
-function! SetTestRunner(runner)
-  let g:bjo_test_runner=a:runner
-endfunction
-
-function! RunCurrentLineInTest()
-  let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\)$') != -1
-  if in_test_file
-    call SetTestFileWithLine()
-  end
-
-  exec "!bin/rspec" g:bjo_test_file . ":" . g:bjo_test_file_line
-endfunction
-
-function! SetTestFile()
-  let g:bjo_test_file=@%
-endfunction
-
-function! SetTestFileWithLine()
-  let g:bjo_test_file=@%
-  let g:bjo_test_file_line=line(".")
-endfunction
-
-map <Leader>t :w<cr>:call RunCurrentLineInTest()<CR>
 
 " More useful k and j
 nmap k gk
@@ -262,3 +220,60 @@ map <Leader>v :vnew <C-R>=expand("%:p:h") . '/'<CR>
 " Indent
 map <Leader>i mmgg=G`m<CR>
 
+" Quicker window movement
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+
+inoremap jj <Esc>
+inoremap <TAB> <C-n>
+
+" Tab Completion
+set complete=.,w,t
+function! InsertTabWrapper()
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+    return "\<c-p>"
+  endif
+endfunction
+inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
+
+" Saving directories
+function! WriteCreatingDirs()
+    execute ':silent !mkdir -p %:h'
+    write
+endfunction
+command! W call WriteCreatingDirs()
+
+" vim-rspec mappings
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
+let g:rspec_command = "Dispatch rspec {spec}"
+
+" use OS clipboard
+" set clipboard=unnamed
+
+" I see you trolling
+set bs=
+
+" Powerlined
+set noshowmode
+
+" Resize splits when the window is resized
+autocmd VimResized * exe "normal! \<c-w>="
+
+" Help System Speedups
+autocmd filetype help nnoremap <buffer><cr> <c-]>
+autocmd filetype help nnoremap <buffer><bs> <c-T>
+autocmd filetype help nnoremap <buffer>q :q<CR>
+autocmd filetype help set nonumber
+
+" NetRW
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_keepdir = 0
