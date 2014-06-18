@@ -1,41 +1,42 @@
 " Vundle Setup
 set nocompatible
 filetype off
-set rtp+=~/.vim/vundle.git
+
+set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " Bundles
-Bundle 'gmarik/vundle'
-Bundle 'tpope/vim-fugitive'
-Bundle 'greplace.vim'
-Bundle 'thoughtbot/vim-rspec'
-Bundle 'tpope/vim-rails.git'
-Bundle 'tpope/vim-cucumber.git'
-Bundle 'tpope/vim-bundler.git'
-Bundle 'tpope/vim-git.git'
-Bundle 'tpope/vim-endwise.git'
-Bundle 'tpope/vim-dispatch.git'
-Bundle 'tpope/vim-rake.git'
-Bundle 'tpope/vim-surround.git'
-Bundle 'altercation/vim-colors-solarized.git'
-Bundle 'othree/html5.vim.git'
-Bundle 'kchmck/vim-coffee-script.git'
-Bundle 'tComment'
-Bundle 'godlygeek/tabular.git'
-Bundle 'itchyny/lightline.vim'
-Bundle 'glsl.vim'
-Bundle 'python.vim'
-Bundle 'OmniCppComplete'
-Bundle 'pangloss/vim-javascript.git'
-Bundle 'stjernstrom/vim-ruby-run.git'
-Bundle 'jayferd/ragel.vim'
-Bundle 'derekwyatt/vim-scala.git'
-Bundle 'rking/ag.vim'
-Bundle 'nono/vim-handlebars.git'
-Bundle 'guns/vim-clojure-static.git'
-Bundle 'elixir-lang/vim-elixir.git'
-Bundle 'christoomey/vim-tmux-navigator'
-Bundle 'kien/ctrlp.vim.git'
+Plugin 'gmarik/vundle'
+Plugin 'tpope/vim-fugitive'
+Plugin 'greplace.vim'
+Plugin 'thoughtbot/vim-rspec'
+Plugin 'tpope/vim-rails.git'
+Plugin 'tpope/vim-cucumber.git'
+Plugin 'tpope/vim-bundler.git'
+Plugin 'tpope/vim-git.git'
+Plugin 'tpope/vim-endwise.git'
+Plugin 'tpope/vim-dispatch.git'
+Plugin 'tpope/vim-rake.git'
+Plugin 'tpope/vim-surround.git'
+Plugin 'altercation/vim-colors-solarized.git'
+Plugin 'othree/html5.vim.git'
+Plugin 'kchmck/vim-coffee-script.git'
+Plugin 'tComment'
+Plugin 'godlygeek/tabular.git'
+Plugin 'itchyny/lightline.vim'
+Plugin 'glsl.vim'
+Plugin 'python.vim'
+Plugin 'OmniCppComplete'
+Plugin 'pangloss/vim-javascript.git'
+Plugin 'stjernstrom/vim-ruby-run.git'
+Plugin 'jayferd/ragel.vim'
+Plugin 'derekwyatt/vim-scala.git'
+Plugin 'rking/ag.vim'
+Plugin 'nono/vim-handlebars.git'
+Plugin 'guns/vim-clojure-static.git'
+Plugin 'elixir-lang/vim-elixir.git'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'kien/ctrlp.vim.git'
 
 filetype plugin indent on
 
@@ -276,4 +277,4 @@ autocmd filetype help set nonumber
 " NetRW
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
-let g:netrw_keepdir = 0
+let g:netrw_keepdir = 1
