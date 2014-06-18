@@ -2,11 +2,11 @@
 set nocompatible
 filetype off
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
 " Bundles
-Plugin 'gmarik/vundle'
+Plugin 'gmarik/vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'greplace.vim'
 Plugin 'thoughtbot/vim-rspec'
@@ -38,6 +38,7 @@ Plugin 'elixir-lang/vim-elixir.git'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'kien/ctrlp.vim.git'
 
+call vundle#end()
 filetype plugin indent on
 
 " Syntax
