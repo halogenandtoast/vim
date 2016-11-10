@@ -275,6 +275,11 @@ let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_keepdir = 1
 
+" Local vimrc - for when my decisions aren't good enough
+if filereadable(glob("~/.vimrc.local"))
+  source ~/.vimrc.local
+endif
+
 " set shell
 set shell=$SHELL
 
