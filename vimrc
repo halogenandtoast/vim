@@ -68,6 +68,8 @@ set splitright
 set listchars=tab:>\ ,trail:•,extends:>,precedes:<,nbsp:+
 set list
 nmap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+autocmd FileType ruby autocmd BufWritePre * %s/\s\+$//e
+autocmd FileType ruby autocmd BufWritePre * %s/\n\n\+$//e
 
 " Leaders
 nmap <leader>r :!ruby %<CR>
