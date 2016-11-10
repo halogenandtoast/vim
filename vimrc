@@ -11,32 +11,25 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'greplace.vim'
 Plugin 'thoughtbot/vim-rspec'
 Plugin 'tpope/vim-rails.git'
-Plugin 'tpope/vim-cucumber.git'
 Plugin 'tpope/vim-bundler.git'
 Plugin 'tpope/vim-git.git'
 Plugin 'tpope/vim-endwise.git'
 Plugin 'tpope/vim-dispatch.git'
 Plugin 'tpope/vim-rake.git'
 Plugin 'tpope/vim-surround.git'
-Plugin 'altercation/vim-colors-solarized.git'
 Plugin 'othree/html5.vim.git'
 Plugin 'kchmck/vim-coffee-script.git'
 Plugin 'tComment'
 Plugin 'godlygeek/tabular.git'
 Plugin 'itchyny/lightline.vim'
-Plugin 'glsl.vim'
-Plugin 'python.vim'
 Plugin 'OmniCppComplete'
 Plugin 'pangloss/vim-javascript.git'
 Plugin 'stjernstrom/vim-ruby-run.git'
-Plugin 'jayferd/ragel.vim'
-Plugin 'derekwyatt/vim-scala.git'
 Plugin 'rking/ag.vim'
 Plugin 'nono/vim-handlebars.git'
-Plugin 'guns/vim-clojure-static.git'
-Plugin 'elixir-lang/vim-elixir.git'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'kien/ctrlp.vim.git'
+Plugin 'flazz/vim-colorschemes'
 
 call vundle#end()
 filetype plugin indent on
@@ -62,13 +55,9 @@ set numberwidth=5
 
 " Color Scheme
 set t_Co=256
-let g:solarized_termcolors=256
-set background=dark
-colorscheme solarized
-call togglebg#map("<F6>")
+colorscheme molokai
 
 " Search Options
-" set hlsearch
 set incsearch
 
 " Splits
@@ -94,8 +83,6 @@ set cursorline
 runtime macros/matchit.vim
 set showmatch
 set mat=5
-" nnoremap <C-M> :nohls<CR><C-L>
-" inoremap <C-M> <C-O>:nohls<CR>
 
 " File messages and options
 set shortmess=atI
@@ -121,7 +108,7 @@ if has("gui_running")
   set guioptions-=t
 
   set mousehide
-  set guifont=Inconsolata\ for\ Powerline:h14
+  set guifont=Inconsolata\ for\ Powerline:h12
 endif
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
                 \ | wincmd p | diffthis
@@ -199,7 +186,7 @@ nmap k gk
 nmap j gj
 
 " Don't add the comment prefix when I hit enter or o/O on a comment line.
-set formatoptions-=or
+au FileType * set fo-=c fo-=r fo-=o
 
 " Rename file
 function! RenameFile()
@@ -228,10 +215,9 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
-inoremap jj <Esc>
+" Tab Completion
 inoremap <TAB> <C-n>
 
-" Tab Completion
 set complete=.,w,t
 function! InsertTabWrapper()
   let col = col('.') - 1
@@ -244,11 +230,18 @@ endfunction
 inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
 
 " Saving directories
-function! WriteCreatingDirs()
-    execute ':silent !mkdir -p %:h'
-    write
+function s:MkNonExDir(file, buf)
+    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+        let dir=fnamemodify(a:file, ':h')
+        if !isdirectory(dir)
+            call mkdir(dir, 'p')
+        endif
+    endif
 endfunction
-command! W call WriteCreatingDirs()
+augroup BWCCreateDir
+    autocmd!
+    autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
+augroup END
 
 " vim-rspec mappings
 map <Leader>t :call RunCurrentSpecFile()<CR>
@@ -258,7 +251,7 @@ map <Leader>a :call RunAllSpecs()<CR>
 let g:rspec_command = "Dispatch rspec {spec}"
 
 " use OS clipboard
-" set clipboard=unnamed
+set clipboard=unnamed
 
 " I see you trolling
 set bs=
@@ -279,3 +272,10 @@ autocmd filetype help set nonumber
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_keepdir = 1
+
+" set shell
+set shell=$SHELL
+
+" Project specific vimrc
+set exrc
+set secure
