@@ -5,7 +5,7 @@ git submodule update
 
 if [ -d "$HOME/.vim" ]
 then
-  read -r -p "~/.vim exists. Delete? [y/N] " response
+  read -r -p "$HOME/.vim exists. Delete? [y/N] " response
   if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
   then
     rm -rf $HOME/.vim
@@ -16,7 +16,7 @@ fi
 
 if [ -f "$HOME/.vimrc" ]
 then
-  read -r -p "~/.vimrc exists. Delete? [y/N] " response
+  read -r -p "$HOME/.vimrc exists. Delete? [y/N] " response
   if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
   then
     rm $HOME/.vimrc
