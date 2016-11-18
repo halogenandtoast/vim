@@ -270,7 +270,7 @@ function! OpenToLineNumber()
   exec ":" . parts[1]
   redraw!
 endfunction
-autocmd BufEnter,BufRead *:* nested call OpenToLineNumber()
+autocmd BufNewFile,BufEnter,BufRead *:* nested call OpenToLineNumber()
 
 " Resize splits when the window is resized
 autocmd VimResized * exe "normal! \<c-w>="
