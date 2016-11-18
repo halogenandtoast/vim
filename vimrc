@@ -30,6 +30,7 @@ Plugin 'nono/vim-handlebars.git'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'kien/ctrlp.vim.git'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'othree/yajs.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -204,12 +205,12 @@ map <leader>n :call RenameFile()<cr>
 
 " Edit another file in the same directory as the current file
 " uses expression to extract path from current file's path
-map <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
-map <Leader>s :split <C-R>=expand("%:p:h") . '/'<CR>
-map <Leader>v :vnew <C-R>=expand("%:p:h") . '/'<CR>
+map <leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
+map <leader>s :split <C-R>=expand("%:p:h") . '/'<CR>
+map <leader>v :vnew <C-R>=expand("%:p:h") . '/'<CR>
 
 " Indent
-map <Leader>i mmgg=G`m<CR>
+map <leader>i mmgg=G`m<CR>
 
 " Quicker window movement
 nnoremap <C-j> <C-w>j
@@ -260,6 +261,16 @@ set bs=
 
 " Powerlined
 set noshowmode
+
+" Open to linenumber
+function! OpenToLineNumber()
+  let filename=expand("%")
+  let parts=split(filename, ":")
+  exec ":e " . parts[0]
+  exec ":" . parts[1]
+  redraw!
+endfunction
+autocmd BufEnter,BufRead *:* nested call OpenToLineNumber()
 
 " Resize splits when the window is resized
 autocmd VimResized * exe "normal! \<c-w>="
