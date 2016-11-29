@@ -1,0 +1,14 @@
+snippet poro
+	class ${1:Foo}
+		def initialize(${2:bar})
+			@$2 = $2
+		end
+
+		def call
+			${3:write code here}
+		end
+
+		private
+
+		attr_reader :$2
+	end
