@@ -32,6 +32,10 @@ Plugin 'kien/ctrlp.vim.git'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'othree/yajs.vim'
 
+if filereadable(expand("~/.vimrc.bundles.local"))
+  source ~/.vimrc.bundles.local
+endif
+
 call vundle#end()
 filetype plugin indent on
 
