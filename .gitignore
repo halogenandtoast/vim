@@ -1,4 +1,5 @@
-bundle
 backups
 .netrwhist
 snippets
+autoload
+plugged

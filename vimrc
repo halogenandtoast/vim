@@ -3,40 +3,40 @@ set nocompatible
 filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
 
-" Bundles
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'greplace.vim'
-Plugin 'thoughtbot/vim-rspec'
-Plugin 'tpope/vim-rails.git'
-Plugin 'tpope/vim-bundler.git'
-Plugin 'tpope/vim-git.git'
-Plugin 'tpope/vim-endwise.git'
-Plugin 'tpope/vim-dispatch.git'
-Plugin 'tpope/vim-rake.git'
-Plugin 'tpope/vim-surround.git'
-Plugin 'othree/html5.vim.git'
-Plugin 'kchmck/vim-coffee-script.git'
-Plugin 'tComment'
-Plugin 'godlygeek/tabular.git'
-Plugin 'itchyny/lightline.vim'
-Plugin 'OmniCppComplete'
-Plugin 'pangloss/vim-javascript.git'
-Plugin 'stjernstrom/vim-ruby-run.git'
-Plugin 'rking/ag.vim'
-Plugin 'nono/vim-handlebars.git'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'kien/ctrlp.vim.git'
-Plugin 'flazz/vim-colorschemes'
-Plugin 'othree/yajs.vim'
+" Plugins
+call plug#begin('~/.vim/plugged')
+Plug 'VundleVim/Vundle.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'greplace.vim'
+Plug 'thoughtbot/vim-rspec'
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-bundler'
+Plug 'tpope/vim-git'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-rake'
+Plug 'tpope/vim-surround'
+Plug 'othree/html5.vim'
+Plug 'kchmck/vim-coffee-script'
+Plug 'tComment'
+Plug 'godlygeek/tabular'
+Plug 'itchyny/lightline.vim'
+Plug 'OmniCppComplete'
+Plug 'pangloss/vim-javascript'
+Plug 'stjernstrom/vim-ruby-run'
+Plug 'rking/ag.vim'
+Plug 'nono/vim-handlebars'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'kien/ctrlp.vim'
+Plug 'flazz/vim-colorschemes'
+Plug 'othree/yajs.vim'
 
-if filereadable(expand("~/.vimrc.bundles.local"))
-  source ~/.vimrc.bundles.local
+if filereadable(expand("~/.vimrc.plugins.local"))
+  source ~/.vimrc.plugins.local
 endif
 
-call vundle#end()
+call plug#end()
 filetype plugin indent on
 
 " Syntax
@@ -60,7 +60,7 @@ set numberwidth=5
 
 " Color Scheme
 set t_Co=256
-colorscheme molokai
+colorscheme triplejelly
 
 " Search Options
 set incsearch
@@ -117,8 +117,6 @@ if has("gui_running")
   set mousehide
   set guifont=Inconsolata\ for\ Powerline:h12
 endif
-command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-                \ | wincmd p | diffthis
 
 " Faster escape
 set noesckeys
@@ -127,7 +125,6 @@ set noesckeys
 set showcmd
 
 " experimental tabbar
-
 function! MyTabLine()
   hi TabLineFill term=bold cterm=bold ctermbg=236
   hi TabLine term=bold cterm=bold ctermbg=240 ctermfg=231
@@ -279,6 +276,9 @@ let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_keepdir = 1
 
+" CTRLP
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+
 " Local vimrc - for when my decisions aren't good enough
 if filereadable(glob("~/.vimrc.local"))
   source ~/.vimrc.local
@@ -290,3 +290,6 @@ set shell=$SHELL
 " Project specific vimrc
 set exrc
 set secure
+
+" Transparent background
+hi Normal guibg=NONE ctermbg=NONE
