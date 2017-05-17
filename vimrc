@@ -1,14 +1,9 @@
-" Vundle Setup
+" Plugins
 set nocompatible
 filetype off
-
-set rtp+=~/.vim/bundle/Vundle.vim
-
-" Plugins
 call plug#begin('~/.vim/plugged')
-Plug 'VundleVim/Vundle.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'greplace.vim'
+Plug 'skwp/greplace'
 Plug 'thoughtbot/vim-rspec'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-bundler'
@@ -18,11 +13,9 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-rake'
 Plug 'tpope/vim-surround'
 Plug 'othree/html5.vim'
-Plug 'kchmck/vim-coffee-script'
-Plug 'tComment'
-Plug 'godlygeek/tabular'
+Plug 'tomtom/tComment'
 Plug 'itchyny/lightline.vim'
-Plug 'OmniCppComplete'
+Plug 'vim-scripts/OmniCppComplete'
 Plug 'pangloss/vim-javascript'
 Plug 'stjernstrom/vim-ruby-run'
 Plug 'rking/ag.vim'
@@ -58,10 +51,6 @@ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 set number
 set numberwidth=5
 
-" Color Scheme
-set t_Co=256
-colorscheme triplejelly
-
 " Search Options
 set incsearch
 
@@ -73,15 +62,11 @@ set splitright
 set listchars=tab:>\ ,trail:•,extends:>,precedes:<,nbsp:+
 set list
 nmap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
-autocmd FileType ruby autocmd BufWritePre * %s/\s\+$//e
-autocmd FileType ruby autocmd BufWritePre * %s/\n\n\+$//e
 
 " Leaders
-nmap <leader>r :!ruby %<CR>
-nmap <leader>c :%s/^\s*#.*$//g<CR>:%s/\(\n\)\n\+/\1/g<CR>:nohl<CR>gg
-nmap <leader>V :tabe ~/.vimrc<CR>
-nmap <leader>h :%s/:\(\w\+\) =>/\1:/gc<CR>
-nmap <leader>R :so ~/.vimrc<CR>
+let maplocalleader = " "
+nmap <Leader>V :tabe ~/.vimrc<CR>
+nmap <Leader>R :so ~/.vimrc<CR>
 
 " Cursor
 set cursorline
@@ -114,8 +99,17 @@ if has("gui_running")
   set guioptions-=L
   set guioptions-=t
 
+  set background=dark
   set mousehide
-  set guifont=Inconsolata\ for\ Powerline:h12
+  set guifont=SourceCodePro:h12
+
+  colorscheme triplejelly
+else
+  " Color Scheme
+  set t_Co=256
+  colorscheme triplejelly
+  " Transparent background
+  hi Normal guibg=NONE ctermbg=NONE
 endif
 
 " Faster escape
@@ -202,16 +196,16 @@ function! RenameFile()
         redraw!
     endif
 endfunction
-map <leader>n :call RenameFile()<cr>
+map <Leader>n :call RenameFile()<cr>
 
 " Edit another file in the same directory as the current file
 " uses expression to extract path from current file's path
-map <leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
-map <leader>s :split <C-R>=expand("%:p:h") . '/'<CR>
-map <leader>v :vnew <C-R>=expand("%:p:h") . '/'<CR>
+map <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
+map <Leader>s :split <C-R>=expand("%:p:h") . '/'<CR>
+map <Leader>v :vnew <C-R>=expand("%:p:h") . '/'<CR>
 
 " Indent
-map <leader>i mmgg=G`m<CR>
+map <Leader>i mmgg=G`m<CR>
 
 " Quicker window movement
 nnoremap <C-j> <C-w>j
@@ -235,13 +229,6 @@ augroup BWCCreateDir
     autocmd!
     autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
-
-" vim-rspec mappings
-map <Leader>t :call RunCurrentSpecFile()<CR>
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
-let g:rspec_command = "Dispatch rspec {spec}"
 
 " use OS clipboard
 set clipboard=unnamed
@@ -290,6 +277,3 @@ set shell=$SHELL
 " Project specific vimrc
 set exrc
 set secure
-
-" Transparent background
-hi Normal guibg=NONE ctermbg=NONE
