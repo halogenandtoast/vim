@@ -3,7 +3,7 @@ set nocompatible
 filetype off
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-fugitive'
-Plug 'skwp/greplace'
+Plug 'skwp/greplace.vim'
 Plug 'thoughtbot/vim-rspec'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-bundler'
@@ -13,7 +13,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-rake'
 Plug 'tpope/vim-surround'
 Plug 'othree/html5.vim'
-Plug 'tomtom/tComment'
+Plug 'tomtom/tcomment_vim'
 Plug 'itchyny/lightline.vim'
 Plug 'vim-scripts/OmniCppComplete'
 Plug 'pangloss/vim-javascript'
