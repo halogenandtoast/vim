@@ -1,5 +1,8 @@
 let g:haskellmode_completion_ghc = 1
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+augroup HaskellOmni
+  autocmd!
+  autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+augroup end
 
 setlocal shiftwidth=2
 setlocal tabstop=2

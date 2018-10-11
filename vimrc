@@ -24,6 +24,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'kien/ctrlp.vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'othree/yajs.vim'
+Plug 'janko-m/vim-test'
 
 if filereadable(expand("~/.vimrc.plugins.local"))
   source ~/.vimrc.plugins.local
@@ -40,6 +41,7 @@ set completeopt=longest,menuone
 
 " Tell vim to shut up
 set visualbell
+set vb t_vb=
 
 " Status bar
 set laststatus=2
@@ -265,12 +267,12 @@ let g:netrw_keepdir = 1
 
 " CTRLP
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
-let g:ctrlp_user_command = {
-      \ 'types': {
-      \ 1: ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard'],
-      \ },
-      \ 'fallback': 'find %s -type f'
-      \ }
+" let g:ctrlp_user_command = {
+"       \ 'types': {
+"       \ 1: ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard'],
+"       \ },
+"       \ 'fallback': 'find %s -type f'
+"       \ }
 
 " Local vimrc - for when my decisions aren't good enough
 if filereadable(glob("~/.vimrc.local"))
@@ -283,3 +285,15 @@ set shell=$SHELL
 " Project specific vimrc
 set exrc
 set secure
+
+" Handle pasted text
+nnoremap gp `[v`]
+
+" Vim test
+nmap <silent> t<C-n> :TestNearest<CR>
+nmap <silent> t<C-f> :TestFile<CR>
+nmap <silent> t<C-s> :TestSuite<CR>
+nmap <silent> t<C-l> :TestLast<CR>
+nmap <silent> t<C-g> :TestVisit<CR>
+
+let test#strategy = "vimterminal"

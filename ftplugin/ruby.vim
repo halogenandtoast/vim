@@ -1,6 +1,9 @@
 " Trailing white space
-autocmd FileType ruby autocmd BufWritePre * %s/\s\+$//e
-autocmd FileType ruby autocmd BufWritePre * %s/\n\n\+$//e
+augroup RubyWhitespace
+  autocmd!
+  autocmd FileType ruby autocmd BufWritePre * %s/\s\+$//e
+  autocmd FileType ruby autocmd BufWritePre * %s/\n\n\+$//e
+augroup end
 
 " Leaders
 nmap <buffer> <localleader>r :!ruby %<CR>
