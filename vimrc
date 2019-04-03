@@ -1,5 +1,7 @@
 " Plugins
 set nocompatible
+set encoding=utf-8
+
 filetype off
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-fugitive'
